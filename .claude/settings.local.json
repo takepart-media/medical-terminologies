@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -v)",
+      "Bash(composer -V)",
+      "Bash(laravel --version)",
+      "Bash(npm -v)",
+      "Bash(bun -v)",
+      "WebFetch(domain:filamentphp.com)",
+      "Bash(laravel new *)",
+      "Bash(composer global *)",
+      "Bash(composer require *)",
+      "Bash(php artisan *)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(vendor/bin/pint --dirty --format agent)",
+      "Bash(git init *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git branch *)"
+    ]
+  }
+}

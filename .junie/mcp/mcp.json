@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Users/koolcsar/Library/Application Support/Herd/bin/php84",
+            "args": [
+                "/Users/koolcsar/Documents/Projects/medical-terminologies/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
