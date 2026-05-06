@@ -9,6 +9,12 @@ use Illuminate\Support\Carbon;
 
 class UserGrowth extends StatsOverviewWidget
 {
+    protected static ?int $sort = -1;
+
+    protected int|string|array $columnSpan = 1;
+
+    protected int|array|null $columns = 1;
+
     protected function getStats(): array
     {
         $start = Carbon::today()->subDays(29);
