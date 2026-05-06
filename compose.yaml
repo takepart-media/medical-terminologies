@@ -12,6 +12,7 @@ services:
             AUTORUN_LARAVEL_MIGRATION_ISOLATION: false
             AUTORUN_LARAVEL_ROUTE_CACHE: false
             PHP_OPCACHE_ENABLE: 1
+            PHP_MEMORY_LIMIT: 1024M
             DB_CONNECTION: pgsql
             DB_HOST: db
             DB_PORT: 5432

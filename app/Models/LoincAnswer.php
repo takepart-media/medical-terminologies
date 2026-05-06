@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+
+/**
+ * @property int $id
+ * @property string|null $list_id
+ * @property string|null $string_id
+ * @property string|null $display_text
+ * @property string|null $name
+ * @property string|null $ext_code_display_name
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
+ * @method static Builder<static>|LoincAnswer newModelQuery()
+ * @method static Builder<static>|LoincAnswer newQuery()
+ * @method static Builder<static>|LoincAnswer query()
+ *
+ * @mixin \Eloquent
+ */
+class LoincAnswer extends Model
+{
+    use HasFactory;
+
+    public const string TABLE = 'loinc_answers';
+
+    protected $table = self::TABLE;
+
+    protected $fillable = [
+        'list_id',
+        'string_id',
+        'display_text',
+        'name',
+        'ext_code_display_name',
+    ];
+}
