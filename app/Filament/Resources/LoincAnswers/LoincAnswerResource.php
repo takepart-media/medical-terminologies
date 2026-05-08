@@ -17,6 +17,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -24,9 +25,9 @@ class LoincAnswerResource extends Resource
 {
     protected static ?string $model = LoincAnswer::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-tag';
+    protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Terminologies';
+    protected static string|\UnitEnum|null $navigationGroup = 'Loinc';
 
     protected static ?string $modelLabel = 'LOINC Answer';
 
