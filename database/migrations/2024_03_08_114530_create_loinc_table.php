@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('loinc', function (Blueprint $table) {
+        Schema::create('loinc_codes', function (Blueprint $table) {
             $table->id();
             $table->string('loinc_num')->unique();
             $table->text('component')->nullable();
@@ -25,6 +25,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('loinc');
+        Schema::dropIfExists('loinc_codes');
     }
 };

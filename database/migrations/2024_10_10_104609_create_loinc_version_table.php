@@ -14,7 +14,7 @@ return new class extends Migration
         });
 
         DB::table('loinc_version')->insert([
-            'version' => '2.77',
+            'version' => '2.82',
         ]);
     }
 

@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Filament\Imports;
+
+use App\Models\Atc;
+use Filament\Actions\Imports\ImportColumn;
+use Filament\Actions\Imports\Importer;
+use Filament\Actions\Imports\Models\Import;
+use Filament\Forms\Components\Select;
+
+class AtcImporter extends Importer
+{
+    protected static ?string $model = Atc::class;
+
+    public static function getOptionsFormComponents(): array
+    {
+        return [
+            Select::make('locale')
+                ->label('Locale')
+                ->options(config('app.supported_locales'))
+                ->default(config('app.locale'))
+                ->required(),
+        ];
+    }
+
+    public static function getColumns(): array
+    {
+        return [
+            ImportColumn::make('atc_code')
+                ->label('ATC_CODE')
+                ->requiredMapping()
+                ->rules(['required', 'max:255']),
+            ImportColumn::make('name')
+                ->label('NAME')
+                ->rules(['max:65535']),
+            ImportColumn::make('ddd_info')
+                ->label('DDD_INFO')
+                ->rules(['max:65535']),
+            ImportColumn::make('unit')
+                ->label('UNIT')
+                ->rules(['max:255']),
+            ImportColumn::make('route')
+                ->label('ROUTE')
+                ->rules(['max:255']),
+            ImportColumn::make('note')
+                ->label('NOTE')
+                ->rules(['max:65535']),
+        ];
+    }
+
+    public function resolveRecord(): ?Atc
+    {
+        app()->setLocale($this->options['locale']);
+
+        return Atc::firstOrNew([
+            'atc_code' => $this->data['atc_code'],
+        ]);
+    }
+
+    public static function getCompletedNotificationBody(Import $import): string
+    {
+        $body = 'Your atc import has completed and '.number_format($import->successful_rows).' '.str('row')->plural($import->successful_rows).' imported.';
+
+        if ($failedRowsCount = $import->getFailedRowsCount()) {
+            $body .= ' '.number_format($failedRowsCount).' '.str('row')->plural($failedRowsCount).' failed to import.';
+        }
+
+        return $body;
+    }
+}

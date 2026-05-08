@@ -31,7 +31,7 @@ class Loinc extends Model
 {
     use HasFactory;
 
-    public const string TABLE = 'loinc';
+    public const string TABLE = 'loinc_codes';
 
     protected $table = self::TABLE;
 
