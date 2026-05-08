@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 
 /**
  * @property int $id
@@ -30,6 +31,7 @@ use Illuminate\Support\Carbon;
 class Loinc extends Model
 {
     use HasFactory;
+    use Searchable;
 
     public const string TABLE = 'loinc_codes';
 
@@ -46,4 +48,13 @@ class Loinc extends Model
         'example_ucum_units',
         'display_name',
     ];
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'loinc_num' => $this->loinc_num,
+            'component' => $this->component,
+            'related_names_2' => $this->related_names_2,
+        ];
+    }
 }

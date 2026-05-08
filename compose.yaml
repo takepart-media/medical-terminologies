@@ -43,5 +43,39 @@ services:
             timeout: 5s
             retries: 10
 
+#    xpack.security.enabled=false — disables auth for local dev, don't use in production
+#    ES_JAVA_OPTS=-Xms512m -Xmx512m — keeps memory usage reasonable on dev machines; raise to 1g/2g for production
+#    Kibana is optional but great for browsing indices and testing queries at http://localhost:5601
+#    The healthcheck ensures Kibana waits for ES to be ready before starting
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:9.0.0
+        container_name: elasticsearch
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        ports:
+            - "9200:9200"
+        volumes:
+            - es_data:/usr/share/elasticsearch/data
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+    kibana:                          # optional but handy for inspecting indices
+        image: docker.elastic.co/kibana/kibana:9.0.0
+        container_name: kibana
+        ports:
+            - "5601:5601"
+        environment:
+            - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+        depends_on:
+            elasticsearch:
+                condition: service_healthy
+
 volumes:
     db-data:
+    es_data:
+        driver: local
