@@ -12,6 +12,8 @@ class SearchLoincAnswerController extends Controller
 {
     public function __invoke(SearchLoincAnswerRequest $request): AnonymousResourceCollection
     {
+        app()->setLocale($request->input('locale', config('app.locale')));
+
         $results = LoincAnswer::search($request->search)
             ->paginate($request->integer('per_page', 25) ?? 25);
 

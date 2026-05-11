@@ -17,12 +17,11 @@ class LoincAnswerResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'list_id' => $this->list_id,
-            'string_id' => $this->string_id,
-            'display_text' => $this->display_text,
+            'listId' => $this->list_id,
+            'stringId' => $this->string_id,
+            'displayText' => $this->display_text,
             'name' => $this->name,
-            'ext_code_display_name' => $this->ext_code_display_name,
+            'extCodeDisplayName' => $this->ext_code_display_name,
         ];
     }
 }

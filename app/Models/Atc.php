@@ -2,10 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Spatie\Translatable\HasTranslations;
 
+/**
+ * @property int $id
+ * @property string $atc_code
+ * @property string|null $name
+ * @property string|null $ddd_info
+ * @property string|null $note
+ * @property string|null $unit
+ * @property string|null $route
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ *
+ * @method static Builder<static>|Atc newModelQuery()
+ * @method static Builder<static>|Atc newQuery()
+ * @method static Builder<static>|Atc query()
+ *
+ * @mixin \Eloquent
+ */
 class Atc extends Model
 {
     use HasTranslations;

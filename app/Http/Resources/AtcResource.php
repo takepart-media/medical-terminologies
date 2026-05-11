@@ -17,10 +17,9 @@ class AtcResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'atc_code' => $this->atc_code,
+            'atcCode' => $this->atc_code,
             'name' => $this->name,
-            'ddd_info' => $this->ddd_info,
+            'dddInfo' => $this->ddd_info,
             'note' => $this->note,
             'unit' => $this->unit,
             'route' => $this->route,

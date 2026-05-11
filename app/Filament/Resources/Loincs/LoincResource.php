@@ -8,6 +8,7 @@ use App\Filament\Resources\Loincs\Pages\EditLoinc;
 use App\Filament\Resources\Loincs\Pages\ListLoincs;
 use App\Filament\Resources\Loincs\Pages\ViewLoinc;
 use App\Models\Loinc;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -20,18 +21,19 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class LoincResource extends Resource
 {
     protected static ?string $model = Loinc::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Loinc';
+    protected static string|UnitEnum|null $navigationGroup = 'LOINC';
 
     protected static ?string $modelLabel = 'LOINC';
 
-    protected static ?string $pluralModelLabel = 'LOINC';
+    protected static ?string $pluralModelLabel = 'Loinc Codes';
 
     protected static ?int $navigationSort = 91;
 

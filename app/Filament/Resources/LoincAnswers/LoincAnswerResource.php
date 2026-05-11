@@ -8,6 +8,7 @@ use App\Filament\Resources\LoincAnswers\Pages\EditLoincAnswer;
 use App\Filament\Resources\LoincAnswers\Pages\ListLoincAnswers;
 use App\Filament\Resources\LoincAnswers\Pages\ViewLoincAnswer;
 use App\Models\LoincAnswer;
+use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -20,18 +21,19 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class LoincAnswerResource extends Resource
 {
     protected static ?string $model = LoincAnswer::class;
 
-    protected static string|null|\BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Loinc';
+    protected static string|UnitEnum|null $navigationGroup = 'LOINC';
 
     protected static ?string $modelLabel = 'LOINC Answer';
 
-    protected static ?string $pluralModelLabel = 'LOINC Answers';
+    protected static ?string $pluralModelLabel = 'Loinc Answers';
 
     protected static ?int $navigationSort = 92;
 
