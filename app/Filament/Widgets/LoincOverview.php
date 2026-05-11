@@ -2,6 +2,8 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\LoincAnswers\LoincAnswerResource;
+use App\Filament\Resources\Loincs\LoincResource;
 use App\Models\Loinc;
 use App\Models\LoincAnswer;
 use Filament\Widgets\StatsOverviewWidget;
@@ -16,9 +18,11 @@ class LoincOverview extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Loincs', Loinc::count()),
+            Stat::make('Total Loincs', Loinc::count())
+                ->url(LoincResource::getUrl('index')),
 
-            Stat::make('Total Loinc Answers', LoincAnswer::count()),
+            Stat::make('Total Loinc Answers', LoincAnswer::count())
+                ->url(LoincAnswerResource::getUrl('index')),
         ];
     }
 }
