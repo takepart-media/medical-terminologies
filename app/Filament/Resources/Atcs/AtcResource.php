@@ -22,7 +22,7 @@ class AtcResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'ATC';
+    protected static string|UnitEnum|null $navigationGroup = 'Medications';
 
     protected static ?string $recordTitleAttribute = 'Atc';
 

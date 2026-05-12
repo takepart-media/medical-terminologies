@@ -26,7 +26,7 @@ class OrphaResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Orpha Codes';
 
-    protected static string|null|UnitEnum $navigationGroup = 'ORPHA';
+    protected static string|null|UnitEnum $navigationGroup = 'Diseases / Conditions';
 
     public static function form(Schema $schema): Schema
     {

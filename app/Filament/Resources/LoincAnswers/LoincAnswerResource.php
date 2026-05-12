@@ -29,7 +29,7 @@ class LoincAnswerResource extends Resource
 
     protected static string|null|BackedEnum $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'LOINC';
+    protected static string|UnitEnum|null $navigationGroup = 'Loinc';
 
     protected static ?string $modelLabel = 'LOINC Answer';
 
