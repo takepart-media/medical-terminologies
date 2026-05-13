@@ -16,6 +16,7 @@ return new class extends Migration
             $table->json('name')->nullable();
             $table->json('ext_code_display_name')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

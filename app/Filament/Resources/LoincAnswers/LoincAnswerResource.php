@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LoincAnswers;
 
+use App\Filament\Imports\LoincAnswerDeprecationImporter;
 use App\Filament\Imports\LoincAnswerImporter;
 use App\Filament\Resources\LoincAnswers\Pages\CreateLoincAnswer;
 use App\Filament\Resources\LoincAnswers\Pages\EditLoincAnswer;
@@ -20,7 +21,10 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
 class LoincAnswerResource extends Resource
@@ -63,11 +67,18 @@ class LoincAnswerResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->headerActions([
                 ImportAction::make()
-                    ->importer(LoincAnswerImporter::class),
+                    ->importer(LoincAnswerImporter::class)
+                    ->chunkSize(1000),
+                ImportAction::make('deprecate')
+                    ->label('Import deprecations')
+                    ->icon('heroicon-o-archive-box-x-mark')
+                    ->color('danger')
+                    ->importer(LoincAnswerDeprecationImporter::class)
+                    ->chunkSize(1000),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -79,6 +90,12 @@ class LoincAnswerResource extends Resource
                 ]),
             ])
             ->paginated([10, 25, 50, 100]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class]);
     }
 
     public static function getRelations(): array

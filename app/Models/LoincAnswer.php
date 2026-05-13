@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Spatie\Translatable\HasTranslations;
@@ -32,6 +33,7 @@ class LoincAnswer extends Model
     use HasFactory;
     use HasTranslations;
     use Searchable;
+    use SoftDeletes;
 
     public const string TABLE = 'loinc_answers';
 
