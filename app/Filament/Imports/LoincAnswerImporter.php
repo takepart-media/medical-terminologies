@@ -6,10 +6,22 @@ use App\Models\LoincAnswer;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Filament\Forms\Components\Select;
 
 class LoincAnswerImporter extends Importer
 {
     protected static ?string $model = LoincAnswer::class;
+
+    public static function getOptionsFormComponents(): array
+    {
+        return [
+            Select::make('locale')
+                ->label('Locale')
+                ->options(config('app.supported_locales'))
+                ->default(config('app.locale'))
+                ->required(),
+        ];
+    }
 
     public static function getColumns(): array
     {
@@ -30,6 +42,8 @@ class LoincAnswerImporter extends Importer
 
     public function resolveRecord(): ?LoincAnswer
     {
+        app()->setLocale($this->options['locale']);
+
         return new LoincAnswer;
     }
 

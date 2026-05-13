@@ -10,7 +10,9 @@ use App\Filament\Resources\Atcs\Schemas\AtcForm;
 use App\Filament\Resources\Atcs\Tables\AtcsTable;
 use App\Models\Atc;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -51,6 +53,30 @@ class AtcResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        $localeSections = [];
+
+        foreach (config('app.supported_locales') as $locale => $localeLabel) {
+            $localeSections[] = Section::make($localeLabel)->schema([
+                TextEntry::make('atc_code')->label('ATC Code'),
+                TextEntry::make("name.{$locale}")
+                    ->label('Name')
+                    ->state(fn (Atc $record): ?string => $record->getTranslation('name', $locale, false)),
+                TextEntry::make("ddd_info.{$locale}")
+                    ->label('DDD Info')
+                    ->state(fn (Atc $record): ?string => $record->getTranslation('ddd_info', $locale, false)),
+                TextEntry::make('unit')->label('Unit'),
+                TextEntry::make('route')->label('Route'),
+                TextEntry::make("note.{$locale}")
+                    ->label('Note')
+                    ->state(fn (Atc $record): ?string => $record->getTranslation('note', $locale, false)),
+            ])->collapsible();
+        }
+
+        return $schema->components($localeSections);
     }
 
     public static function getPages(): array

@@ -10,7 +10,9 @@ use App\Filament\Resources\Icd10s\Schemas\Icd10Form;
 use App\Filament\Resources\Icd10s\Tables\Icd10sTable;
 use App\Models\Icd10;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -51,6 +53,22 @@ class Icd10Resource extends Resource
         return [
             //
         ];
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        $localeSections = [];
+
+        foreach (config('app.supported_locales') as $locale => $localeLabel) {
+            $localeSections[] = Section::make($localeLabel)->schema([
+                TextEntry::make('icd10_code')->label('ICD-10 Code'),
+                TextEntry::make("related_text.{$locale}")
+                    ->label('Related Text')
+                    ->state(fn (Icd10 $record): ?string => $record->getTranslation('related_text', $locale, false)),
+            ])->collapsible();
+        }
+
+        return $schema->components($localeSections);
     }
 
     public static function getPages(): array

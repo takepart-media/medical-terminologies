@@ -90,24 +90,33 @@ class LoincAnswerResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make()->schema([
-                    TextEntry::make('list_id')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
-                        ->label('List ID Detailed Information')
-                        ->url(fn (LoincAnswer $record): string => url('https://loinc.org/'.$record->list_id))
-                        ->openUrlInNewTab(),
-                    TextEntry::make('string_id')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
-                        ->label('String ID Detailes Information')
-                        ->url(fn (LoincAnswer $record): string => url('https://loinc.org/'.$record->string_id))
-                        ->openUrlInNewTab(),
-                    TextEntry::make('display_text')->label('Display Text'),
-                    TextEntry::make('name')->label('Name'),
-                    TextEntry::make('ext_code_display_name')->label('Ext Code Display Name'),
-                ]),
-            ]);
+        $localeSections = [];
+
+        foreach (config('app.supported_locales') as $locale => $localeLabel) {
+            $localeSections[] = Section::make($localeLabel)->schema([
+                TextEntry::make('list_id')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
+                    ->label('List ID Detailed Information')
+                    ->url(fn (LoincAnswer $record): string => url('https://loinc.org/'.$record->list_id))
+                    ->openUrlInNewTab(),
+                TextEntry::make('string_id')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
+                    ->label('String ID Detailes Information')
+                    ->url(fn (LoincAnswer $record): string => url('https://loinc.org/'.$record->string_id))
+                    ->openUrlInNewTab(),
+                TextEntry::make("display_text.{$locale}")
+                    ->label('Display Text')
+                    ->state(fn (LoincAnswer $record): ?string => $record->getTranslation('display_text', $locale, false)),
+                TextEntry::make("name.{$locale}")
+                    ->label('Name')
+                    ->state(fn (LoincAnswer $record): ?string => $record->getTranslation('name', $locale, false)),
+                TextEntry::make("ext_code_display_name.{$locale}")
+                    ->label('Ext Code Display Name')
+                    ->state(fn (LoincAnswer $record): ?string => $record->getTranslation('ext_code_display_name', $locale, false)),
+            ])->collapsible();
+        }
+
+        return $schema->components($localeSections);
     }
 
     public static function getPages(): array

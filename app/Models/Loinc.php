@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * @property int $id
@@ -34,6 +35,7 @@ use Laravel\Scout\Searchable;
 class Loinc extends Model
 {
     use HasFactory;
+    use HasTranslations;
     use Searchable;
     use SoftDeletes;
 
@@ -41,12 +43,27 @@ class Loinc extends Model
 
     protected $table = self::TABLE;
 
+    public array $translatable = [
+        'component', 'related_names_2', 'short_name', 'display_name',
+    ];
+
     public function toSearchableArray(): array
     {
-        return [
+        $searchables = [
             'loinc_num' => $this->loinc_num,
-            'component' => $this->component,
-            'related_names_2' => $this->related_names_2,
+            'property' => $this->property,
+            'system' => $this->system,
+            'example_units' => $this->example_units,
+            'example_ucum_units' => $this->example_ucum_units,
         ];
+
+        foreach (config('app.supported_locales') as $locale => $localeDef) {
+            $searchables["component_{$locale}"] = $this->getTranslation('component', $locale, false);
+            $searchables["related_names_2_{$locale}"] = $this->getTranslation('related_names_2', $locale, false);
+            $searchables["short_name_{$locale}"] = $this->getTranslation('short_name', $locale, false);
+            $searchables["display_name_{$locale}"] = $this->getTranslation('display_name', $locale, false);
+        }
+
+        return $searchables;
     }
 }

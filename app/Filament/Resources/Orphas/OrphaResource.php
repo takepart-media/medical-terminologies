@@ -10,7 +10,9 @@ use App\Filament\Resources\Orphas\Schemas\OrphaForm;
 use App\Filament\Resources\Orphas\Tables\OrphasTable;
 use App\Models\Orpha;
 use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
@@ -51,6 +53,28 @@ class OrphaResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        $localeSections = [];
+
+        foreach (config('app.supported_locales') as $locale => $localeLabel) {
+            $localeSections[] = Section::make($localeLabel)->schema([
+                TextEntry::make('orpha_code')->label('Orpha Code'),
+                TextEntry::make("label.{$locale}")
+                    ->label('Label')
+                    ->state(fn (Orpha $record): ?string => $record->getTranslation('label', $locale, false)),
+                TextEntry::make("label_type.{$locale}")
+                    ->label('Label Type')
+                    ->state(fn (Orpha $record): ?string => $record->getTranslation('label_type', $locale, false)),
+                TextEntry::make("classification_level.{$locale}")
+                    ->label('Classification Level')
+                    ->state(fn (Orpha $record): ?string => $record->getTranslation('classification_level', $locale, false)),
+            ])->collapsible();
+        }
+
+        return $schema->components($localeSections);
     }
 
     public static function getPages(): array

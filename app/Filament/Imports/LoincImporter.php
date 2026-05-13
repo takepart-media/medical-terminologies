@@ -6,10 +6,22 @@ use App\Models\Loinc;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Models\Import;
+use Filament\Forms\Components\Select;
 
 class LoincImporter extends Importer
 {
     protected static ?string $model = Loinc::class;
+
+    public static function getOptionsFormComponents(): array
+    {
+        return [
+            Select::make('locale')
+                ->label('Locale')
+                ->options(config('app.supported_locales'))
+                ->default(config('app.locale'))
+                ->required(),
+        ];
+    }
 
     public static function getColumns(): array
     {
@@ -47,6 +59,8 @@ class LoincImporter extends Importer
 
     public function resolveRecord(): ?Loinc
     {
+        app()->setLocale($this->options['locale']);
+
         $record = Loinc::withTrashed()->firstOrNew([
             'loinc_num' => $this->data['loinc_num'],
         ]);

@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('list_id')->nullable();
             $table->string('string_id')->nullable();
-            $table->text('display_text')->nullable();
-            $table->string('name')->nullable();
-            $table->text('ext_code_display_name')->nullable();
+            $table->json('display_text')->nullable();
+            $table->json('name')->nullable();
+            $table->json('ext_code_display_name')->nullable();
             $table->timestamps();
         });
     }

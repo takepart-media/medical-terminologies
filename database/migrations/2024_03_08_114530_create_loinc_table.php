@@ -11,14 +11,14 @@ return new class extends Migration
         Schema::create('loinc_codes', function (Blueprint $table) {
             $table->id();
             $table->string('loinc_num')->unique();
-            $table->text('component')->nullable();
+            $table->json('component')->nullable();
             $table->string('property')->nullable();
             $table->string('system')->nullable();
-            $table->text('related_names_2')->nullable();
-            $table->string('short_name')->nullable();
+            $table->json('related_names_2')->nullable();
+            $table->json('short_name')->nullable();
             $table->string('example_units')->nullable();
             $table->string('example_ucum_units')->nullable();
-            $table->text('display_name')->nullable();
+            $table->json('display_name')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

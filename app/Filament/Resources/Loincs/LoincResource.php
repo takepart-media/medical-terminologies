@@ -98,22 +98,36 @@ class LoincResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                Section::make()->schema([
-                    TextEntry::make('loinc_num')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
-                        ->label('Detailed Information')
-                        ->url(fn (Loinc $record): string => url('https://loinc.org/'.$record->loinc_num))
-                        ->openUrlInNewTab(),
-                    TextEntry::make('component')->label('Component'),
-                    TextEntry::make('property')->label('Property'),
-                    TextEntry::make('system')->label('System'),
-                    TextEntry::make('short_name')->label('Short name'),
-                    TextEntry::make('related_names_2')->label('Related Names')->separator(';'),
-                    TextEntry::make('display_name')->label('Display Name'),
-                ]),
-            ]);
+        $localeSections = [];
+
+        foreach (config('app.supported_locales') as $locale => $localeLabel) {
+            $localeSections[] = Section::make($localeLabel)->schema([
+                TextEntry::make('loinc_num')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Click on the loinc number for even more details')
+                    ->label('Detailed Information')
+                    ->url(fn (Loinc $record): string => url('https://loinc.org/'.$record->loinc_num))
+                    ->openUrlInNewTab(),
+                TextEntry::make("component.{$locale}")
+                    ->label('Component')
+                    ->state(fn (Loinc $record): ?string => $record->getTranslation('component', $locale, false)),
+                TextEntry::make('property')->label('Property'),
+                TextEntry::make('system')->label('System'),
+                TextEntry::make("short_name.{$locale}")
+                    ->label('Short name')
+                    ->state(fn (Loinc $record): ?string => $record->getTranslation('short_name', $locale, false)),
+                TextEntry::make("related_names_2.{$locale}")
+                    ->label('Related Names')
+                    ->separator(';')
+                    ->state(fn (Loinc $record): ?string => $record->getTranslation('related_names_2', $locale, false)),
+                TextEntry::make('example_units')->label('Example Units'),
+                TextEntry::make('example_ucum_units')->label('Example UCUM Units'),
+                TextEntry::make("display_name.{$locale}")
+                    ->label('Display Name')
+                    ->state(fn (Loinc $record): ?string => $record->getTranslation('display_name', $locale, false)),
+            ])->collapsible();
+        }
+
+        return $schema->components($localeSections);
     }
 
     public static function getPages(): array
