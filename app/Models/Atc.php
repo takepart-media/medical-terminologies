@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Spatie\Translatable\HasTranslations;
@@ -25,10 +27,12 @@ use Spatie\Translatable\HasTranslations;
  *
  * @mixin \Eloquent
  */
+#[Fillable(['atc_code', 'name', 'ddd_info', 'note', 'unit', 'route'])]
 class Atc extends Model
 {
     use HasTranslations;
     use Searchable;
+    use SoftDeletes;
 
     public array $translatable = [
         'name', 'ddd_info', 'note',
@@ -37,15 +41,6 @@ class Atc extends Model
     public const string TABLE = 'atc_codes';
 
     protected $table = self::TABLE;
-
-    protected $fillable = [
-        'atc_code',
-        'name',
-        'ddd_info',
-        'note',
-        'unit',
-        'route',
-    ];
 
     public function toSearchableArray(): array
     {

@@ -52,9 +52,15 @@ class AtcImporter extends Importer
     {
         app()->setLocale($this->options['locale']);
 
-        return Atc::firstOrNew([
+        $record = Atc::withTrashed()->firstOrNew([
             'atc_code' => $this->data['atc_code'],
         ]);
+
+        if ($record->trashed()) {
+            $record->restore();
+        }
+
+        return $record;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

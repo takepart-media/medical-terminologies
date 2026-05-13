@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Loincs;
 
+use App\Filament\Imports\LoincDeprecationImporter;
 use App\Filament\Imports\LoincImporter;
 use App\Filament\Resources\Loincs\Pages\CreateLoinc;
 use App\Filament\Resources\Loincs\Pages\EditLoinc;
@@ -20,7 +21,10 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
 class LoincResource extends Resource
@@ -54,7 +58,7 @@ class LoincResource extends Resource
                 TextColumn::make('example_units')->sortable(),
             ])
             ->filters([
-                //
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make(),
@@ -64,6 +68,12 @@ class LoincResource extends Resource
                 ImportAction::make()
                     ->importer(LoincImporter::class)
                     ->chunkSize(1000),
+                ImportAction::make('deprecate')
+                    ->label('Import deprecations')
+                    ->icon('heroicon-o-archive-box-x-mark')
+                    ->color('danger')
+                    ->importer(LoincDeprecationImporter::class)
+                    ->chunkSize(1000),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
@@ -71,6 +81,12 @@ class LoincResource extends Resource
                 ]),
             ])
             ->paginated([10, 25, 50, 100]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([SoftDeletingScope::class]);
     }
 
     public static function getRelations(): array

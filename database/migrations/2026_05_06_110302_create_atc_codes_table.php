@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('route')->nullable();
             $table->json('note')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

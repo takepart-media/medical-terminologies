@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('example_ucum_units')->nullable();
             $table->text('display_name')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

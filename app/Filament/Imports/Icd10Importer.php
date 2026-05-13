@@ -40,9 +40,15 @@ class Icd10Importer extends Importer
     {
         app()->setLocale($this->options['locale']);
 
-        return Icd10::firstOrNew([
+        $record = Icd10::withTrashed()->firstOrNew([
             'icd10_code' => $this->data['icd10_code'],
         ]);
+
+        if ($record->trashed()) {
+            $record->restore();
+        }
+
+        return $record;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

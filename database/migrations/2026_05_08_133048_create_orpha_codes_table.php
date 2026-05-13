@@ -18,6 +18,7 @@ return new class extends Migration
             $table->json('label_type')->nullable();
             $table->json('classification_level')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

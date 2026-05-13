@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Spatie\Translatable\HasTranslations;
@@ -23,10 +25,12 @@ use Spatie\Translatable\HasTranslations;
  *
  * @mixin \Eloquent
  */
+#[Fillable(['orpha_code', 'label', 'label_type', 'classification_level'])]
 class Orpha extends Model
 {
     use HasTranslations;
     use Searchable;
+    use SoftDeletes;
 
     public const string TABLE = 'orpha_codes';
 
@@ -34,13 +38,6 @@ class Orpha extends Model
 
     public array $translatable = [
         'label', 'label_type', 'classification_level',
-    ];
-
-    protected $fillable = [
-        'orpha_code',
-        'label',
-        'label_type',
-        'classification_level',
     ];
 
     public function toSearchableArray(): array

@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 use Spatie\Translatable\HasTranslations;
@@ -21,21 +23,18 @@ use Spatie\Translatable\HasTranslations;
  *
  * @mixin \Eloquent
  */
+#[Fillable(['icd10_code', 'related_text'])]
 class Icd10 extends Model
 {
     use HasTranslations;
     use Searchable;
+    use SoftDeletes;
 
     public const string TABLE = 'icd10_codes';
 
     protected $table = self::TABLE;
 
     public array $translatable = [
-        'related_text',
-    ];
-
-    protected $fillable = [
-        'icd10_code',
         'related_text',
     ];
 

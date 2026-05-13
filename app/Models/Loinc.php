@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Laravel\Scout\Searchable;
 
@@ -28,26 +30,16 @@ use Laravel\Scout\Searchable;
  *
  * @mixin \Eloquent
  */
+#[Fillable(['loinc_num', 'component', 'property', 'system', 'related_names_2', 'short_name', 'example_units', 'example_ucum_units', 'display_name'])]
 class Loinc extends Model
 {
     use HasFactory;
     use Searchable;
+    use SoftDeletes;
 
     public const string TABLE = 'loinc_codes';
 
     protected $table = self::TABLE;
-
-    protected $fillable = [
-        'loinc_num',
-        'component',
-        'property',
-        'system',
-        'related_names_2',
-        'short_name',
-        'example_units',
-        'example_ucum_units',
-        'display_name',
-    ];
 
     public function toSearchableArray(): array
     {

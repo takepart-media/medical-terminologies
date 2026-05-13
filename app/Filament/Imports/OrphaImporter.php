@@ -46,9 +46,15 @@ class OrphaImporter extends Importer
     {
         app()->setLocale($this->options['locale']);
 
-        return Orpha::firstOrNew([
+        $record = Orpha::withTrashed()->firstOrNew([
             'orpha_code' => $this->data['orpha_code'],
         ]);
+
+        if ($record->trashed()) {
+            $record->restore();
+        }
+
+        return $record;
     }
 
     public static function getCompletedNotificationBody(Import $import): string

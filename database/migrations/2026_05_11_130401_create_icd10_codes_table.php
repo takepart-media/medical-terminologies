@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('icd10_code')->unique();
             $table->json('related_text')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

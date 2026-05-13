@@ -47,9 +47,15 @@ class LoincImporter extends Importer
 
     public function resolveRecord(): ?Loinc
     {
-        return Loinc::firstOrNew([
+        $record = Loinc::withTrashed()->firstOrNew([
             'loinc_num' => $this->data['loinc_num'],
         ]);
+
+        if ($record->trashed()) {
+            $record->restore();
+        }
+
+        return $record;
     }
 
     public static function getCompletedNotificationBody(Import $import): string
