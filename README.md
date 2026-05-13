@@ -6,13 +6,13 @@ A Laravel-based service that stores and exposes common medical terminologies thr
 
 | Terminology      | Domain                | Localized |
 |------------------|-----------------------|-----------|
-| LOINC codes      | Lab & clinical observations | No |
-| LOINC answers    | Answer lists for LOINC observations | No |
+| LOINC codes      | Lab & clinical observations | Yes |
+| LOINC answers    | Answer lists for LOINC observations | Yes |
 | ICD-10 codes     | Diseases & diagnoses  | Yes |
 | Orpha codes      | Rare diseases         | Yes |
 | ATC codes        | Medications           | Yes |
 
-Localized terminologies are translatable into the locales configured in `config/app.php` under `supported_locales` (currently `en`, `de`, `de_SI`, `tr`).
+Localized terminologies are translatable into the locales configured in `config/app.php` under `supported_locales` (currently `en`, `de`, `de_SI`, `tr`). For LOINC codes and LOINC answers, the code itself stays untranslated while the human-readable label fields (e.g. LOINC long common name, LOINC answer display text) are stored per locale.
 
 ### Search API
 
@@ -47,6 +47,10 @@ The Filament admin panel provides resources for browsing each terminology, along
 ### Importing Terminologies
 
 Each terminology can be bulk-loaded into the database by uploading a CSV file through its Filament resource page. Imports run via Filament's importer pipeline, which validates rows, persists them in chunks, and updates the Scout/Elasticsearch index so the data becomes searchable through the API immediately after import completes.
+
+#### Deprecation Imports
+
+In addition to the standard importer, every terminology (LOINC codes, LOINC answers, ICD-10, Orpha, ATC) exposes a separate deprecation importer on its Filament resource. Uploading a CSV of identifiers through this importer soft-deletes the matching records, which removes them from the Scout/Elasticsearch index and the search API while keeping the rows in the database for historical lookups.
 
 ### Running with Docker
 
