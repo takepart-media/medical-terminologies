@@ -3,8 +3,8 @@
 .claude
 .junie
 .dockerignore
-Dockerfile
-compose.yaml
+Dockerfile*
+compose*.yaml
 docker-compose*.yml
 README.md
 README.old.md

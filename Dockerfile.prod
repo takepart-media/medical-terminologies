@@ -1,0 +1,17 @@
+FROM serversideup/php:8.4-fpm-nginx-alpine
+
+USER root
+
+RUN install-php-extensions intl bcmath pdo_pgsql
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY --chown=www-data:www-data . /var/www/html
+
+WORKDIR /var/www/html
+
+USER www-data
+
+# --no-scripts avoids running artisan commands (e.g. package:discover) at build
+# time, when no real .env exists; serversideup autorun handles them at boot.
+RUN composer install --no-dev --no-scripts --optimize-autoloader --no-interaction --no-progress --prefer-dist
