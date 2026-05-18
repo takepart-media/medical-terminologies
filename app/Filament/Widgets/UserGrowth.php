@@ -45,7 +45,7 @@ class UserGrowth extends StatsOverviewWidget
         };
 
         return [
-            Stat::make('Total users', User::count())
+            Stat::make('Total admin users', User::count())
                 ->description($newLast30.' new in last 30 days')
                 ->descriptionIcon($deltaIcon)
                 ->color($deltaColor)
