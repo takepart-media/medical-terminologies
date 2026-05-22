@@ -12,7 +12,6 @@ class SearchIcd10Controller extends Controller
 {
     public function __invoke(SearchIcd10Request $request): AnonymousResourceCollection
     {
-        app()->setLocale($request->input('locale', config('app.locale')));
         $locale = app()->getLocale();
 
         $results = Icd10::search($request->search)

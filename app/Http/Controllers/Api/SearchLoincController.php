@@ -12,8 +12,6 @@ class SearchLoincController extends Controller
 {
     public function __invoke(SearchLoincRequest $request): AnonymousResourceCollection
     {
-        app()->setLocale($request->input('locale', config('app.locale')));
-
         $results = Loinc::search($request->search)
             ->paginate($request->integer('per_page', 25) ?? 25);
 

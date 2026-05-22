@@ -12,7 +12,6 @@ class SearchOrphaController extends Controller
 {
     public function __invoke(SearchOrphaRequest $request): AnonymousResourceCollection
     {
-        app()->setLocale($request->input('locale', config('app.locale')));
         $locale = app()->getLocale();
 
         $results = Orpha::search($request->search)

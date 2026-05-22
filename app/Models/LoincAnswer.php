@@ -58,4 +58,16 @@ class LoincAnswer extends Model
 
         return $searchables;
     }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        if (ctype_digit((string) $value)) {
+            return $this->newQuery()->whereKey($value)->firstOrFail();
+        }
+
+        return $this->newQuery()
+            ->where('string_id', $value)
+            ->orWhere('list_id', $value)
+            ->firstOrFail();
+    }
 }

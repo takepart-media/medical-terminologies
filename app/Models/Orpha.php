@@ -54,4 +54,11 @@ class Orpha extends Model
 
         return $searchables;
     }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        return ctype_digit((string) $value)
+            ? $this->newQuery()->whereKey($value)->firstOrFail()
+            : $this->newQuery()->where('orpha_code', $value)->firstOrFail();
+    }
 }

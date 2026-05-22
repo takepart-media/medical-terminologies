@@ -12,7 +12,6 @@ class SearchAtcController extends Controller
 {
     public function __invoke(SearchAtcRequest $request): AnonymousResourceCollection
     {
-        app()->setLocale($request->input('locale', config('app.locale')));
         $locale = app()->getLocale();
 
         $results = Atc::search($request->search)

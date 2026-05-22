@@ -50,4 +50,11 @@ class Icd10 extends Model
 
         return $searchables;
     }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        return ctype_digit((string) $value)
+            ? $this->newQuery()->whereKey($value)->firstOrFail()
+            : $this->newQuery()->where('icd10_code', $value)->firstOrFail();
+    }
 }
