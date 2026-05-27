@@ -11,10 +11,14 @@ use App\Http\Controllers\Api\ShowLoincAnswerController;
 use App\Http\Controllers\Api\ShowLoincController;
 use App\Http\Controllers\Api\ShowOrphaController;
 use App\Http\Middleware\SetLocaleFromHeader;
+use App\Http\Middleware\WhitelistIpAddresses;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('terminologies')
-    ->middleware(SetLocaleFromHeader::class)
+    ->middleware([
+        WhitelistIpAddresses::class,
+        SetLocaleFromHeader::class,
+    ])
     ->group(function (): void {
         Route::get('loincs/search', SearchLoincController::class);
         Route::get('loinc-answers/search', SearchLoincAnswerController::class);

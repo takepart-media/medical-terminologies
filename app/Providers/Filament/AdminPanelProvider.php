@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 'Loinc',
                 'Medications',
                 'Diseases / Conditions',
+                'Settings',
             ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

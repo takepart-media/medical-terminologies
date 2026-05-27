@@ -17,9 +17,12 @@ Localized terminologies are translatable into the locales configured in `config/
 currently `en`, `de`, `de_SI`, `tr`). For LOINC codes and LOINC answers, the code itself stays untranslated while the
 human-readable label fields (e.g. LOINC long common name, LOINC answer display text) are stored per locale.
 
-### Search API
+### API
 
-All search endpoints are exposed under the `/api/terminologies` prefix and return paginated Eloquent API resources.
+All endpoints are exposed under the `/api/terminologies` prefix and return Eloquent API resources. Each terminology
+offers a paginated search endpoint and a detail endpoint.
+
+#### Search endpoints
 
 | Method | Endpoint                                  | Controller                    |
 |--------|-------------------------------------------|-------------------------------|
@@ -29,24 +32,84 @@ All search endpoints are exposed under the `/api/terminologies` prefix and retur
 | GET    | `/api/terminologies/orphas/search`        | `SearchOrphaController`       |
 | GET    | `/api/terminologies/atcs/search`          | `SearchAtcController`         |
 
-#### Query parameters
+##### Query parameters
 
-| Parameter  | Type    | Required | Description                                                                                                                                                                               |
-|------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `search`   | string  | yes      | Search term (1–255 characters).                                                                                                                                                           |
-| `per_page` | integer | no       | Page size, 1–100. Defaults to `25`.                                                                                                                                                       |
-| `locale`   | string  | no       | One of the configured `supported_locales`. Applies to the localized terminologies (ICD-10, Orpha, ATC) and selects which translation is matched and returned. Defaults to the app locale. |
+| Parameter  | Type    | Required | Description                         |
+|------------|---------|----------|-------------------------------------|
+| `search`   | string  | yes      | Search term (1–255 characters).     |
+| `per_page` | integer | no       | Page size, 1–100. Defaults to `25`. |
 
-#### Example
+#### Detail endpoints
+
+Each terminology has a detail endpoint that accepts either the database `id` (numeric) or the natural code. The lookup
+field is auto-detected: a purely numeric path segment is treated as an `id`, anything else is matched against the code
+field for that terminology. Returns `404` if no record matches.
+
+| Method | Endpoint                                      | Lookup field(s)                          | Controller                  |
+|--------|-----------------------------------------------|------------------------------------------|-----------------------------|
+| GET    | `/api/terminologies/loincs/{idOrCode}`        | `id` or `loinc_num`                      | `ShowLoincController`       |
+| GET    | `/api/terminologies/loinc-answers/{idOrCode}` | `id` or `string_id`/`list_id` (either)   | `ShowLoincAnswerController` |
+| GET    | `/api/terminologies/icd10s/{idOrCode}`        | `id` or `icd10_code`                     | `ShowIcd10Controller`       |
+| GET    | `/api/terminologies/orphas/{idOrCode}`        | `id` or `orpha_code`                     | `ShowOrphaController`       |
+| GET    | `/api/terminologies/atcs/{idOrCode}`          | `id` or `atc_code`                       | `ShowAtcController`         |
+
+> **Note:** `orpha_code` values are purely numeric, so they cannot be looked up via this auto-detect route — a numeric
+> path segment always resolves to the `id` column. Use the database `id` when fetching Orpha entries by this endpoint.
+
+#### Localization
+
+All terminology endpoints read the requested locale from the `Accept-Language` request header. The header is matched
+against the configured `supported_locales` in `config/app.php` (`en`, `de`, `de_SI`, `tr`) using standard content
+negotiation (including `q=` weighting), and the best match is set as the app locale for the request. If the header is
+missing or none of its values match a supported locale, the app falls back to the default `APP_LOCALE`.
+
+The chosen locale affects which translation is used for both matching (in the case of search) and the values returned
+in the response, for the localized terminologies (LOINC, LOINC answers, ICD-10, Orpha, ATC).
+
+#### Examples
 
 ```http
-GET /api/terminologies/icd10s/search?search=diabetes&locale=de&per_page=10
+GET /api/terminologies/icd10s/search?search=diabetes&per_page=10
+Accept-Language: de
 ```
+
+```http
+GET /api/terminologies/loincs/8480-6
+Accept-Language: de;q=0.9, en;q=0.5
+```
+
+```http
+GET /api/terminologies/atcs/42
+Accept-Language: en
+```
+
+#### IP whitelisting
+
+All `/api/terminologies/*` endpoints are gated by an IP whitelist enforced by the `WhitelistIpAddresses` middleware. The
+allowed entries are managed in the Filament admin panel under **Settings → Allowed IPs**. Each entry is one of:
+
+- a single IPv4/IPv6 address (e.g. `203.0.113.5`),
+- a CIDR range (e.g. `10.0.0.0/8`, `2001:db8::/32`), or
+- a hostname (e.g. `localhost`, `some-domain.local`) — resolved via DNS at request time.
+
+Behavior:
+
+- The list is **fail-closed**: when no active entries exist, every request is rejected with `403 Forbidden`. The same
+  applies when the request's IP is not in the active list.
+- Each entry has an `is_active` toggle so it can be temporarily disabled without losing its label/notes.
+- The resolved IP list is cached for `WHITELIST_CACHE_TTL` seconds (default `300`, see `config/whitelist.php`). Admin
+  edits (create / update / delete) flush the cache immediately; DNS-only changes for hostname entries propagate within
+  the TTL.
+- Matching uses `Symfony\Component\HttpFoundation\IpUtils::checkIp`, which handles IPv4, IPv6, and CIDR uniformly.
+- `TrustProxies` is configured to trust all proxies (`at: '*'`), so the request IP is taken from `X-Forwarded-For` when
+  the app sits behind a reverse proxy.
+
+After deploying for the first time, add at least one entry before clients can reach the API.
 
 ### Admin Panel
 
 The Filament admin panel provides resources for browsing each terminology, along with overview widgets summarizing the
-dataset.
+dataset. API access control is also managed here — see [IP whitelisting](#ip-whitelisting) above.
 
 #### Creating the Initial Admin
 
