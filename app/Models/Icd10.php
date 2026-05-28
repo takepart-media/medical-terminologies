@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ use Spatie\Translatable\HasTranslations;
  * @method static Builder<static>|Icd10 newQuery()
  * @method static Builder<static>|Icd10 query()
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 #[Fillable(['icd10_code', 'related_text'])]
 class Icd10 extends Model
@@ -53,8 +54,6 @@ class Icd10 extends Model
 
     public function resolveRouteBinding($value, $field = null): ?Model
     {
-        return ctype_digit((string) $value)
-            ? $this->newQuery()->whereKey($value)->firstOrFail()
-            : $this->newQuery()->where('icd10_code', $value)->firstOrFail();
+        return $this->newQuery()->where('icd10_code', $value)->firstOrFail();
     }
 }
