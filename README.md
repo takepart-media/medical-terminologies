@@ -56,6 +56,22 @@ field for that terminology. Returns `404` if no record matches.
 > **Note:** `orpha_code` values are purely numeric, so they cannot be looked up via this auto-detect route — a numeric
 > path segment always resolves to the `id` column. Use the database `id` when fetching Orpha entries by this endpoint.
 
+#### LOINC version
+
+| Method | Endpoint                            | Controller                   |
+|--------|-------------------------------------|------------------------------|
+| GET    | `/api/terminologies/loincs/version` | `ShowLoincVersionController` |
+
+Returns the LOINC release version currently loaded into the database, e.g.:
+
+```json
+{
+  "data": {
+    "version": "2.82"
+  }
+}
+```
+
 #### Localization
 
 All terminology endpoints read the requested locale from the `Accept-Language` request header. The header is matched

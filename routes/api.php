@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\ShowAtcController;
 use App\Http\Controllers\Api\ShowIcd10Controller;
 use App\Http\Controllers\Api\ShowLoincAnswerController;
 use App\Http\Controllers\Api\ShowLoincController;
+use App\Http\Controllers\Api\ShowLoincVersionController;
 use App\Http\Controllers\Api\ShowOrphaController;
 use App\Http\Middleware\SetLocaleFromHeader;
 use App\Http\Middleware\WhitelistIpAddresses;
@@ -20,6 +21,8 @@ Route::prefix('terminologies')
         SetLocaleFromHeader::class,
     ])
     ->group(function (): void {
+        Route::get('loincs/version', ShowLoincVersionController::class);
+
         Route::get('loincs/search', SearchLoincController::class);
         Route::get('loinc-answers/search', SearchLoincAnswerController::class);
         Route::get('atcs/search', SearchAtcController::class);
