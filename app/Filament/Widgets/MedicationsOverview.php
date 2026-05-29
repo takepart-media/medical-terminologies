@@ -7,9 +7,9 @@ use App\Models\Atc;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class AtcOverview extends StatsOverviewWidget
+class MedicationsOverview extends StatsOverviewWidget
 {
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 4;
 
     protected int|array|null $columns = 2;
 
