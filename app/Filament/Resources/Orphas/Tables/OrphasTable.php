@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Orphas\Tables;
 
+use App\Filament\Actions\StreamingImportAction;
 use App\Filament\Imports\OrphaDeprecationImporter;
 use App\Filament\Imports\OrphaImporter;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
-use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -45,10 +45,10 @@ class OrphasTable
                 EditAction::make(),
             ])
             ->headerActions([
-                ImportAction::make()
+                StreamingImportAction::make()
                     ->importer(OrphaImporter::class)
                     ->chunkSize(1000),
-                ImportAction::make('deprecate')
+                StreamingImportAction::make('deprecate')
                     ->label('Import deprecations')
                     ->icon('heroicon-o-archive-box-x-mark')
                     ->color('danger')

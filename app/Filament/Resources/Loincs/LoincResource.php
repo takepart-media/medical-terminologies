@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Loincs;
 
+use App\Filament\Actions\StreamingImportAction;
 use App\Filament\Imports\LoincDeprecationImporter;
 use App\Filament\Imports\LoincImporter;
 use App\Filament\Resources\Loincs\Pages\CreateLoinc;
@@ -13,7 +14,6 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -65,10 +65,10 @@ class LoincResource extends Resource
                 EditAction::make(),
             ])
             ->headerActions([
-                ImportAction::make()
+                StreamingImportAction::make()
                     ->importer(LoincImporter::class)
                     ->chunkSize(1000),
-                ImportAction::make('deprecate')
+                StreamingImportAction::make('deprecate')
                     ->label('Import deprecations')
                     ->icon('heroicon-o-archive-box-x-mark')
                     ->color('danger')

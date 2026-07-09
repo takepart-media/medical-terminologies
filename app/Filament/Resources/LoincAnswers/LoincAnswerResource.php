@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LoincAnswers;
 
+use App\Filament\Actions\StreamingImportAction;
 use App\Filament\Imports\LoincAnswerDeprecationImporter;
 use App\Filament\Imports\LoincAnswerImporter;
 use App\Filament\Resources\LoincAnswers\Pages\CreateLoincAnswer;
@@ -13,7 +14,6 @@ use BackedEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ImportAction;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -70,10 +70,10 @@ class LoincAnswerResource extends Resource
                 TrashedFilter::make(),
             ])
             ->headerActions([
-                ImportAction::make()
+                StreamingImportAction::make()
                     ->importer(LoincAnswerImporter::class)
                     ->chunkSize(1000),
-                ImportAction::make('deprecate')
+                StreamingImportAction::make('deprecate')
                     ->label('Import deprecations')
                     ->icon('heroicon-o-archive-box-x-mark')
                     ->color('danger')
